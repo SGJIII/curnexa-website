@@ -1,7 +1,15 @@
 {
   "extends": "astro/tsconfig.json",
   "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
     "strictNullChecks": true,
-    "allowJs": true
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
