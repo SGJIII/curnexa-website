@@ -103,9 +103,10 @@ const features = [
   window.addEventListener('scroll', () => {
     const scrolled = window.scrollY;
     document.querySelectorAll('.feature-card').forEach((card, index) => {
+      const cardElement = card as HTMLElement;
       const offset = index * window.innerHeight;
       const translateY = Math.max(0, scrolled - offset);
-      card.style.transform = `translateY(${translateY}px)`;
+      cardElement.style.transform = `translateY(${translateY}px)`;
     });
   });
 </script>
