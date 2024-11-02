@@ -80,7 +80,7 @@ const features = [
 <style>
   .features {
     position: relative;
-    height: 400vh; /* 100vh for each feature */
+    height: 400vh;
     background: white;
   }
 
@@ -94,14 +94,17 @@ const features = [
     gap: 2rem;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.6s ease-out;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
     padding: 0 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    background: white;
   }
 
   .feature-card.visible {
     opacity: 1;
+    visibility: visible;
   }
 
   .feature-content {
@@ -191,7 +194,6 @@ const features = [
     
     featureCards.forEach((card, index) => {
       const cardElement = card as HTMLElement;
-      const rect = cardElement.getBoundingClientRect();
       const triggerPoint = index * viewportHeight;
       const nextTriggerPoint = (index + 1) * viewportHeight;
       
