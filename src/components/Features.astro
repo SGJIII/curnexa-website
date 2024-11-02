@@ -80,38 +80,27 @@ const features = [
 </section>
 
 <script>
-  // Add data-index to each feature card for stacking
-  document.querySelectorAll('.feature-card').forEach((card, index) => {
-    // Type assertion to HTMLElement
-    (card as HTMLElement).style.setProperty('--index', index.toString());
-  });
-
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
         }
       });
     },
     {
-      threshold: 0.15,
-      rootMargin: '0px 0px -100px 0px'
+      threshold: 0.1
     }
   );
 
-  document.querySelectorAll('.fade-in').forEach(element => {
+  document.querySelectorAll('.feature-card').forEach(element => {
     observer.observe(element);
   });
 </script>
 
 <style>
   .features {
-    padding: 0;
     position: relative;
-    padding-top: 50vh;
-    padding-bottom: 50vh;
   }
 
   .container {
@@ -119,29 +108,24 @@ const features = [
   }
 
   .feature-card {
-    min-height: 100vh;
     height: 100vh;
-    padding: 0;
     display: flex;
     gap: 2rem;
     align-items: center;
-    background: white;
     position: sticky;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: calc(1 - var(--index, 1));
+    top: 0;
+    background: white;
   }
 
-  /* Update fade-in animation to come from bottom */
-  :global(.fade-in) {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  }
+  /* Adjust each card's sticky position */
+  .feature-card:nth-child(1) { z-index: 4; }
+  .feature-card:nth-child(2) { z-index: 3; }
+  .feature-card:nth-child(3) { z-index: 2; }
+  .feature-card:nth-child(4) { z-index: 1; }
 
-  :global(.fade-in.visible) {
-    opacity: 1;
-    transform: translateY(0);
+  /* Container for scroll height */
+  .features {
+    height: 400vh; /* 4 sections × 100vh */
   }
 
   .feature-content {
@@ -201,14 +185,12 @@ const features = [
 
   @media (max-width: 768px) {
     .features {
-      padding-top: 0;
-      padding-bottom: 0;
+      height: auto;
     }
 
     .feature-card {
       position: relative;
-      transform: none;
-      top: 0;
+      height: auto;
       min-height: auto;
       padding: 3rem 0;
     }
