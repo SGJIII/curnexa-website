@@ -109,6 +109,8 @@ const features = [
   .features {
     padding: 0;
     position: relative;
+    padding-top: 50vh;
+    padding-bottom: 50vh;
   }
 
   .container {
@@ -117,13 +119,15 @@ const features = [
 
   .feature-card {
     min-height: 100vh;
-    padding: 4rem 0;
+    height: 100vh;
+    padding: 0;
     display: flex;
     gap: 2rem;
     align-items: center;
     background: white;
     position: sticky;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: calc(1 - var(--index, 1));
   }
 
@@ -195,7 +199,15 @@ const features = [
   }
 
   @media (max-width: 768px) {
+    .features {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
     .feature-card {
+      position: relative;
+      transform: none;
+      top: 0;
       min-height: auto;
       padding: 3rem 0;
     }
