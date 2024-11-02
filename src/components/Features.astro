@@ -194,8 +194,8 @@ const features = [
     
     featureCards.forEach((card, index) => {
       const cardElement = card as HTMLElement;
-      const triggerPoint = index * viewportHeight;
-      const nextTriggerPoint = (index + 1) * viewportHeight;
+      const triggerPoint = Math.floor(index * viewportHeight * 0.8);
+      const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 1.2);
       
       if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
         cardElement.classList.add('visible');
