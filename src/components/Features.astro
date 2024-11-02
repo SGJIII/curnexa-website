@@ -80,7 +80,7 @@ const features = [
 <style>
   .features {
     position: relative;
-    height: 400vh;
+    height: 800vh;
     background: white;
   }
 
@@ -95,11 +95,12 @@ const features = [
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
     padding: 0 2rem;
     max-width: 1200px;
     margin: 0 auto;
     background: white;
+    transform: none !important;
   }
 
   .feature-card.visible {
@@ -194,8 +195,8 @@ const features = [
     
     featureCards.forEach((card, index) => {
       const cardElement = card as HTMLElement;
-      const triggerPoint = Math.floor(index * viewportHeight * 0.8);
-      const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 1.2);
+      const triggerPoint = Math.floor(index * viewportHeight * 1.6);
+      const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 2.4);
       
       if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
         cardElement.classList.add('visible');
