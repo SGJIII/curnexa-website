@@ -1,15 +1,22 @@
 {
-  "extends": "astro/tsconfig.json",
   "compilerOptions": {
-    "strict": true,
-    "allowJs": true,
-    "strictNullChecks": true,
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "astro",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "strictNullChecks": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "types": ["astro/client"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
