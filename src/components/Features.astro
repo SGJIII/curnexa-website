@@ -80,18 +80,21 @@ const features = [
 </section>
 
 <script>
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    },
-    {
-      threshold: 0.1
-    }
-  );
+  const observerOptions = {
+    root: null,
+    threshold: 0.1,
+    rootMargin: "-45% 0px -45% 0px"  // Triggers near the center of the viewport
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      } else {
+        entry.target.classList.remove('visible');
+      }
+    });
+  }, observerOptions);
 
   document.querySelectorAll('.feature-card').forEach(element => {
     observer.observe(element);
@@ -101,6 +104,9 @@ const features = [
 <style>
   .features {
     position: relative;
+    /* Space for all features to scroll */
+    height: 400vh;
+    overflow: hidden;
   }
 
   .container {
@@ -108,24 +114,37 @@ const features = [
   }
 
   .feature-card {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     gap: 2rem;
     align-items: center;
     position: sticky;
     top: 0;
-    background: white;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
   }
 
-  /* Adjust each card's sticky position */
-  .feature-card:nth-child(1) { z-index: 4; }
-  .feature-card:nth-child(2) { z-index: 3; }
-  .feature-card:nth-child(3) { z-index: 2; }
-  .feature-card:nth-child(4) { z-index: 1; }
+  /* Sticky positions for each card */
+  .feature-card:nth-child(1) {
+    z-index: 4;
+    top: 0vh;
+  }
+  .feature-card:nth-child(2) {
+    z-index: 3;
+    top: 0vh;
+  }
+  .feature-card:nth-child(3) {
+    z-index: 2;
+    top: 0vh;
+  }
+  .feature-card:nth-child(4) {
+    z-index: 1;
+    top: 0vh;
+  }
 
-  /* Container for scroll height */
-  .features {
-    height: 400vh; /* 4 sections × 100vh */
+  /* Show feature when it's in the viewport */
+  .feature-card.visible {
+    opacity: 1;
   }
 
   .feature-content {
