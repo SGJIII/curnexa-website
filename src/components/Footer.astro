@@ -24,7 +24,7 @@ const footerLinks = {
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="/images/logo.svg" alt="Curnexa" height="32" />
+        <img src="/images/logo.png" alt="Curnexa" height="40" />
         <p>AI-powered emergency care solutions for healthcare providers.</p>
       </div>
       
@@ -130,5 +130,12 @@ const footerLinks = {
     .footer-links {
       text-align: center;
     }
+  }
+
+  .footer-brand img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1); /* This will make the logo white in the dark footer */
   }
 </style>
