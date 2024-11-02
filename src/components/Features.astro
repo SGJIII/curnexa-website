@@ -82,7 +82,8 @@ const features = [
 <script>
   // Add data-index to each feature card for stacking
   document.querySelectorAll('.feature-card').forEach((card, index) => {
-    card.style.setProperty('--index', index);
+    // Type assertion to HTMLElement
+    (card as HTMLElement).style.setProperty('--index', index.toString());
   });
 
   const observer = new IntersectionObserver(
