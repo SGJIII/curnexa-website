@@ -80,6 +80,11 @@ const features = [
 </section>
 
 <script>
+  // Add data-index to each feature card for stacking
+  document.querySelectorAll('.feature-card').forEach((card, index) => {
+    card.style.setProperty('--index', index);
+  });
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach(entry => {
@@ -90,8 +95,8 @@ const features = [
       });
     },
     {
-      threshold: 0.15, // Trigger earlier
-      rootMargin: '0px 0px -100px 0px' // Negative margin to trigger before element is fully in view
+      threshold: 0.15,
+      rootMargin: '0px 0px -100px 0px'
     }
   );
 
@@ -102,22 +107,30 @@ const features = [
 
 <style>
   .features {
-    padding: 0; /* Remove default padding */
+    padding: 0;
+    position: relative;
+  }
+
+  .container {
+    position: relative;
   }
 
   .feature-card {
-    min-height: 100vh; /* Make each feature take full screen height */
+    min-height: 100vh;
     padding: 4rem 0;
     display: flex;
     gap: 2rem;
     align-items: center;
-    background: white; /* Consistent white background */
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: calc(1 - var(--index, 1));
   }
 
   /* Update fade-in animation to come from bottom */
   :global(.fade-in) {
     opacity: 0;
-    transform: translateY(50px); /* Start from below */
+    transform: translateY(50px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
   }
 
@@ -183,7 +196,7 @@ const features = [
 
   @media (max-width: 768px) {
     .feature-card {
-      min-height: auto; /* Allow flexible height on mobile */
+      min-height: auto;
       padding: 3rem 0;
     }
 
