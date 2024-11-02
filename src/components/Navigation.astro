@@ -11,6 +11,7 @@ const navLinks = [
   <div class="container nav-content">
     <a href="/" class="logo">
       <img src="/images/logo.png" alt="Curnexa" height="40" />
+      <span class="logo-text">Curnexa</span>
     </a>
     <div class="nav-links">
       {navLinks.map(link => (
@@ -61,9 +62,35 @@ const navLinks = [
     }
   }
 
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
   .logo img {
     height: 40px;
     width: auto;
     object-fit: contain;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+    background: linear-gradient(135deg, #333 0%, #50B9C6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+    
+    .logo-text {
+      font-size: 1.25rem;
+    }
   }
 </style>
