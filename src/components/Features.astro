@@ -54,85 +54,56 @@ const features = [
 ---
 
 <section class="features">
-  <div class="container">
-    {features.map((feature, index) => (
-      <div class="feature-card fade-in">
-        <div class={`feature-content ${index % 2 === 1 ? 'order-2' : ''}`}>
-          <h2>{feature.title}</h2>
-          <p>{feature.description}</p>
-          {feature.stats && (
-            <div class="stats">
-              {feature.stats.map(stat => (
-                <div class="stat-item">
-                  <h3>{stat.number}</h3>
-                  <p>{stat.text}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <div class={`feature-image ${index % 2 === 1 ? 'order-1' : ''}`}>
-          <img src={feature.image} alt={feature.title} />
-        </div>
+  {features.map((feature, index) => (
+    <div class="feature-card" data-index={index}>
+      <div class={`feature-content ${index % 2 === 1 ? 'order-2' : ''}`}>
+        <h2>{feature.title}</h2>
+        <p>{feature.description}</p>
+        {feature.stats && (
+          <div class="stats">
+            {feature.stats.map(stat => (
+              <div class="stat-item">
+                <h3>{stat.number}</h3>
+                <p>{stat.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-    ))}
-  </div>
+      <div class={`feature-image ${index % 2 === 1 ? 'order-1' : ''}`}>
+        <img src={feature.image} alt={feature.title} />
+      </div>
+    </div>
+  ))}
 </section>
-
-<script>
-  const observerOptions = {
-    root: null,
-    threshold: 0.5,
-    rootMargin: "0px"
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      } else {
-        entry.target.classList.remove('visible');
-      }
-    });
-  }, observerOptions);
-
-  document.querySelectorAll('.feature-card').forEach(card => {
-    observer.observe(card);
-  });
-</script>
 
 <style>
   .features {
     position: relative;
-    height: 400vh;
+    height: 400vh; /* 100vh for each feature */
     background: white;
-  }
-
-  .container {
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
   }
 
   .feature-card {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 100vh;
-    width: 100%;
     display: flex;
     gap: 2rem;
     align-items: center;
-    position: sticky;
-    top: 0;
-    padding: 2rem 0;
     opacity: 0;
-    transition: all 0.5s ease-out;
-    background: white;
+    transition: opacity 0.6s ease-out;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  .feature-card:nth-child(1) { z-index: 4; }
-  .feature-card:nth-child(2) { z-index: 3; }
-  .feature-card:nth-child(3) { z-index: 2; }
-  .feature-card:nth-child(4) { z-index: 1; }
+  .feature-card[data-index="0"] { z-index: 4; }
+  .feature-card[data-index="1"] { z-index: 3; }
+  .feature-card[data-index="2"] { z-index: 2; }
+  .feature-card[data-index="3"] { z-index: 1; }
 
   .feature-card.visible {
     opacity: 1;
@@ -201,7 +172,7 @@ const features = [
     .feature-card {
       position: relative;
       height: auto;
-      min-height: auto;
+      opacity: 1;
       padding: 3rem 0;
     }
 
@@ -215,3 +186,39 @@ const features = [
     }
   }
 </style>
+
+<script>
+  // Throttle function for better performance
+  function throttle(func: Function, limit: number) {
+    let inThrottle: boolean;
+    return function(...args: any[]) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    }
+  }
+
+  const featureCards = document.querySelectorAll('.feature-card');
+  
+  const handleScroll = throttle(() => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const viewportHeight = window.innerHeight;
+    
+    featureCards.forEach((card, index) => {
+      const triggerPoint = index * viewportHeight;
+      const nextTriggerPoint = (index + 1) * viewportHeight;
+
+      if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
+        card.classList.add('visible');
+      } else {
+        card.classList.remove('visible');
+      }
+    });
+  }, 50); // Throttle to 50ms
+
+  window.addEventListener('scroll', handleScroll);
+  // Initial check
+  handleScroll();
+</script>
