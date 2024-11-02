@@ -13,7 +13,7 @@ const features = [
         text: "This amounts to over $3 million in care provider time, not to mention the significant impact on patient outcomes."
       }
     ],
-    image: "/images/InstantIntage.gif"
+    image: "/images/InstantIntage1080.gif"
   },
   {
     title: "Clinical Decision Support",
@@ -80,19 +80,20 @@ const features = [
 </section>
 
 <script>
-  function handleIntersection(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }
-
-  const observer = new IntersectionObserver(handleIntersection, {
-    threshold: 0.2,
-    rootMargin: '50px'
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.15, // Trigger earlier
+      rootMargin: '0px 0px -100px 0px' // Negative margin to trigger before element is fully in view
+    }
+  );
 
   document.querySelectorAll('.fade-in').forEach(element => {
     observer.observe(element);
@@ -101,15 +102,33 @@ const features = [
 
 <style>
   .features {
-    padding: 4rem 0;
+    padding: 0; /* Remove default padding */
   }
 
   .feature-card {
-    padding: 2rem 0;
-    margin: 2rem 0;
+    min-height: 100vh; /* Make each feature take full screen height */
+    padding: 4rem 0;
     display: flex;
     gap: 2rem;
     align-items: center;
+    background: white; /* Ensure consistent background */
+  }
+
+  /* Alternate background colors for visual separation */
+  .feature-card:nth-child(even) {
+    background: var(--background-light);
+  }
+
+  /* Update fade-in animation to come from bottom */
+  :global(.fade-in) {
+    opacity: 0;
+    transform: translateY(50px); /* Start from below */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  :global(.fade-in.visible) {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .feature-content {
@@ -169,8 +188,8 @@ const features = [
 
   @media (max-width: 768px) {
     .feature-card {
-      flex-direction: column;
-      gap: 1rem;
+      min-height: auto; /* Allow flexible height on mobile */
+      padding: 3rem 0;
     }
 
     .feature-content, .feature-image {
