@@ -38,11 +38,11 @@
       this.x = x;
       this.y = y;
       this.canvas = canvas;
-      this.size = Math.random() * 2 + 1;
-      this.speedX = Math.random() * 1 - 0.5;
-      this.speedY = Math.random() * 1 - 0.5;
-      this.color = '#4CAF50';
-      this.alpha = Math.random() * 0.5 + 0.1;
+      this.size = Math.random() * 3 + 1;
+      this.speedX = Math.random() * 2 - 1;
+      this.speedY = Math.random() * 2 - 1;
+      this.color = '#50B9C6';
+      this.alpha = Math.random() * 0.7 + 0.3;
     }
 
     update(): void {
@@ -81,7 +81,7 @@
     }
 
     function createParticles(): void {
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 150; i++) {
         particles.push(
           new Particle(
             Math.random() * canvas.width,
@@ -99,9 +99,11 @@
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 100) {
+          if (distance < 150) {
+            const opacity = 0.3 - distance/150;
             context.beginPath();
-            context.strokeStyle = `rgba(76, 175, 80, ${0.2 - distance/100})`;
+            context.strokeStyle = `rgba(80, 185, 198, ${opacity})`;
+            context.lineWidth = 2 - distance/150;
             context.moveTo(particles[i].x, particles[i].y);
             context.lineTo(particles[j].x, particles[j].y);
             context.stroke();
@@ -109,6 +111,24 @@
         }
       }
     }
+
+    let mouse = { x: null as number | null, y: null as number | null };
+    
+    canvas.addEventListener('mousemove', (event) => {
+      mouse.x = event.x;
+      mouse.y = event.y;
+      
+      for (let i = 0; i < 3; i++) {
+        particles.push(
+          new Particle(
+            mouse.x,
+            mouse.y,
+            canvas
+          )
+        );
+        if (particles.length > 200) particles.shift();
+      }
+    });
 
     function animate(): void {
       if (!ctx) return;
@@ -141,10 +161,10 @@
 <style>
   .hero {
     position: relative;
-    background: #1a1a1a;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d2326 100%);
     color: white;
     padding: 6rem 0;
-    min-height: 80vh;
+    min-height: 90vh;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -156,7 +176,20 @@
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.2;
+    opacity: 0.4;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(80, 185, 198, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(80, 185, 198, 0.1) 0%, transparent 50%);
+    pointer-events: none;
   }
 
   .container {
@@ -165,16 +198,30 @@
   }
 
   .hero h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 1.5rem;
     line-height: 1.2;
+    background: linear-gradient(135deg, #ffffff 0%, #50B9C6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glow 3s ease-in-out infinite alternate;
   }
 
   .hero p {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-bottom: 2rem;
     max-width: 600px;
     opacity: 0.9;
+    text-shadow: 0 0 20px rgba(80, 185, 198, 0.3);
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 20px rgba(80, 185, 198, 0.3);
+    }
+    to {
+      text-shadow: 0 0 30px rgba(80, 185, 198, 0.8);
+    }
   }
 
   @media (max-width: 768px) {
