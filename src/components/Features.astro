@@ -85,7 +85,7 @@ const features = [
   }
 
   .feature-card {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
@@ -99,11 +99,6 @@ const features = [
     max-width: 1200px;
     margin: 0 auto;
   }
-
-  .feature-card[data-index="0"] { z-index: 4; }
-  .feature-card[data-index="1"] { z-index: 3; }
-  .feature-card[data-index="2"] { z-index: 2; }
-  .feature-card[data-index="3"] { z-index: 1; }
 
   .feature-card.visible {
     opacity: 1;
@@ -188,37 +183,40 @@ const features = [
 </style>
 
 <script>
-  // Throttle function for better performance
-  function throttle(func: Function, limit: number) {
-    let inThrottle: boolean;
-    return function(...args: any[]) {
-      if (!inThrottle) {
-        func.apply(this, args);
-        inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
-      }
-    }
-  }
-
   const featureCards = document.querySelectorAll('.feature-card');
   
-  const handleScroll = throttle(() => {
+  const handleScroll = () => {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const viewportHeight = window.innerHeight;
     
     featureCards.forEach((card, index) => {
+      const cardElement = card as HTMLElement;
+      const rect = cardElement.getBoundingClientRect();
       const triggerPoint = index * viewportHeight;
       const nextTriggerPoint = (index + 1) * viewportHeight;
-
+      
       if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
-        card.classList.add('visible');
+        cardElement.classList.add('visible');
+        cardElement.style.zIndex = '2';
       } else {
-        card.classList.remove('visible');
+        cardElement.classList.remove('visible');
+        cardElement.style.zIndex = '1';
       }
     });
-  }, 50); // Throttle to 50ms
+  };
 
-  window.addEventListener('scroll', handleScroll);
+  // Use requestAnimationFrame for smoother scrolling
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
   // Initial check
   handleScroll();
 </script>
