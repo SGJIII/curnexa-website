@@ -122,18 +122,25 @@
     let mouse = { x: null as number | null, y: null as number | null };
     
     canvas.addEventListener('mousemove', (event) => {
-      mouse.x = event.x;
-      mouse.y = event.y;
+      // Check if we're hovering over a button
+      const target = event.target as HTMLElement;
+      const isOverButton = target.closest('.btn') !== null;
       
-      for (let i = 0; i < 3; i++) {
-        particles.push(
-          new Particle(
-            mouse.x,
-            mouse.y,
-            canvas
-          )
-        );
-        if (particles.length > 200) particles.shift();
+      // Only create particles if we're not over a button
+      if (!isOverButton) {
+        mouse.x = event.x;
+        mouse.y = event.y;
+        
+        for (let i = 0; i < 3; i++) {
+          particles.push(
+            new Particle(
+              mouse.x,
+              mouse.y,
+              canvas
+            )
+          );
+          if (particles.length > 200) particles.shift();
+        }
       }
     });
 
