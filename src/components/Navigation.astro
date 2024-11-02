@@ -1,0 +1,62 @@
+---
+const navLinks = [
+  { text: "Instant Intake", href: "#instant-intake" },
+  { text: "Decision Support", href: "#decision-support" },
+  { text: "Research Assistant", href: "#research" },
+  { text: "Contact", href: "#contact" },
+];
+---
+
+<nav class="nav">
+  <div class="container nav-content">
+    <a href="/" class="logo">
+      <img src="/images/logo.svg" alt="Curnexa" height="32" />
+    </a>
+    <div class="nav-links">
+      {navLinks.map(link => (
+        <a href={link.href}>{link.text}</a>
+      ))}
+      <a href="https://app.curnexa.com/login" class="btn btn-outline">Login</a>
+      <a href="https://app.curnexa.com/signup" class="btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    padding: 1rem 0;
+    background: white;
+    border-bottom: 1px solid #eee;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .nav-links a:not(.btn) {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .nav-links a:hover:not(.btn) {
+    color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+  }
+</style>

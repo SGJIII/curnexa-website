@@ -1,0 +1,159 @@
+---
+---
+
+<section class="hero">
+  <div class="hero-background">
+    <canvas id="heroCanvas"></canvas>
+  </div>
+  <div class="container">
+    <h1>Revolutionizing<br>Emergency Care with<br>AI Insights</h1>
+    <p>Our Clinical Decision Support System seamlessly integrates with existing workflows to streamline patient documentation and provide access to clinical patient information. Experience enhanced decision-making and unprecedented safety through AI-driven insights and analytics.</p>
+    <a href="#contact" class="btn btn-primary">Get in touch</a>
+  </div>
+</section>
+
+<script>
+  class Particle {
+    constructor(x, y, canvas) {
+      this.x = x;
+      this.y = y;
+      this.canvas = canvas;
+      this.size = Math.random() * 2 + 1;
+      this.speedX = Math.random() * 1 - 0.5;
+      this.speedY = Math.random() * 1 - 0.5;
+      this.color = '#4CAF50';
+      this.alpha = Math.random() * 0.5 + 0.1;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+
+      if (this.size > 0.2) this.size -= 0.01;
+
+      if (this.x < 0 || this.x > this.canvas.width) this.speedX *= -1;
+      if (this.y < 0 || this.y > this.canvas.height) this.speedY *= -1;
+    }
+
+    draw(ctx) {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function initCanvas() {
+    const canvas = document.getElementById('heroCanvas');
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const particleCount = 50;
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight * 0.8;
+    }
+
+    function createParticles() {
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height,
+          canvas
+        ));
+      }
+    }
+
+    function connectParticles(ctx) {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(76, 175, 80, ${0.1 * (1 - distance/150)})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw(ctx);
+      });
+      
+      connectParticles(ctx);
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    createParticles();
+    animate();
+  }
+
+  // Initialize canvas when the component mounts
+  document.addEventListener('DOMContentLoaded', initCanvas);
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    background: #1a1a1a;
+    color: white;
+    padding: 6rem 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+    
+    .hero p {
+      font-size: 1rem;
+    }
+  }
+</style>

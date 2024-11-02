@@ -1,0 +1,167 @@
+---
+const features = [
+  {
+    title: "Streamline Emergency Care with Instant Intake",
+    description: "Our instant intake system automatically pulls information from your patient's medical history based on the symptoms the patient is exhibiting. Get state of the art AI predictions around onset, pain levels and human-centered diagnosis.",
+    stats: [
+      {
+        number: "20k hrs",
+        text: "A projected medical center in the Cincinnati region could save time by automating..."
+      },
+      {
+        number: "$3M",
+        text: "This amounts to $3 million in cost savings each year to maintain the same level of care"
+      }
+    ],
+    image: "/images/instant-intake.png"
+  },
+  {
+    title: "Clinical Decision Support",
+    description: "Access the latest medical research pertinent to your patient's medical history effectively. Evaluate analytics of per reviewed articles. The AI-generated insights unlock potential next steps grounded in the most recent medical findings.",
+    image: "/images/decision-support.png"
+  },
+  {
+    title: "Transforming Medical Research: Save Time and Enhance Data Quality Effortlessly",
+    description: "Our system significantly improves the time spent on data compilation, enabling your team to focus on what matters. With automated processes, the quality of data is improved, ensuring more reliable results.",
+    stats: [
+      {
+        number: "150x",
+        text: "Acceleration of traditional medical data collection"
+      },
+      {
+        number: "99.4%",
+        text: "Accuracy of AI findings compared to the best human annotation data we can get"
+      }
+    ],
+    image: "/images/research.png"
+  }
+];
+---
+
+<section class="features">
+  <div class="container">
+    {features.map((feature, index) => (
+      <div class="feature-card fade-in">
+        <div class={`feature-content ${index % 2 === 1 ? 'order-2' : ''}`}>
+          <h2>{feature.title}</h2>
+          <p>{feature.description}</p>
+          {feature.stats && (
+            <div class="stats">
+              {feature.stats.map(stat => (
+                <div class="stat-item">
+                  <h3>{stat.number}</h3>
+                  <p>{stat.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div class={`feature-image ${index % 2 === 1 ? 'order-1' : ''}`}>
+          <img src={feature.image} alt={feature.title} />
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  function handleIntersection(entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }
+
+  const observer = new IntersectionObserver(handleIntersection, {
+    threshold: 0.2,
+    rootMargin: '50px'
+  });
+
+  document.querySelectorAll('.fade-in').forEach(element => {
+    observer.observe(element);
+  });
+</script>
+
+<style>
+  .features {
+    padding: 4rem 0;
+  }
+
+  .feature-card {
+    padding: 2rem 0;
+    margin: 2rem 0;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .feature-content {
+    flex: 1;
+  }
+
+  .feature-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .feature-content p {
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-image {
+    flex: 1;
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .feature-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .stat-item h3 {
+    font-size: 2rem;
+    color: var(--primary-color);
+  }
+
+  .stat-item p {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .order-1 {
+    order: 1;
+  }
+
+  .order-2 {
+    order: 2;
+  }
+
+  @media (max-width: 768px) {
+    .feature-card {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feature-content, .feature-image {
+      order: unset !important;
+    }
+
+    .stats {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>
