@@ -13,8 +13,28 @@
 </section>
 
 <script>
-  class Particle {
-    constructor(x, y, canvas) {
+  interface ParticleProps {
+    x: number;
+    y: number;
+    size: number;
+    speedX: number;
+    speedY: number;
+    color: string;
+    alpha: number;
+    canvas: HTMLCanvasElement;
+  }
+
+  class Particle implements ParticleProps {
+    x: number;
+    y: number;
+    size: number;
+    speedX: number;
+    speedY: number;
+    color: string;
+    alpha: number;
+    canvas: HTMLCanvasElement;
+
+    constructor(x: number, y: number, canvas: HTMLCanvasElement) {
       this.x = x;
       this.y = y;
       this.canvas = canvas;
@@ -25,7 +45,7 @@
       this.alpha = Math.random() * 0.5 + 0.1;
     }
 
-    update() {
+    update(): void {
       this.x += this.speedX;
       this.y += this.speedY;
 
@@ -35,7 +55,7 @@
       if (this.y < 0 || this.y > this.canvas.height) this.speedY *= -1;
     }
 
-    draw(ctx) {
+    draw(ctx: CanvasRenderingContext2D): void {
       ctx.save();
       ctx.globalAlpha = this.alpha;
       ctx.fillStyle = this.color;
@@ -46,38 +66,42 @@
     }
   }
 
-  function initCanvas() {
-    const canvas = document.getElementById('heroCanvas');
+  function initCanvas(): void {
+    const canvas = document.querySelector('#heroCanvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
-    const particles = [];
-    const particleCount = 50;
-    
-    function resizeCanvas() {
+    if (!ctx) return;
+
+    const particles: Particle[] = [];
+
+    function resizeCanvas(): void {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight * 0.8;
     }
 
-    function createParticles() {
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle(
-          Math.random() * canvas.width,
-          Math.random() * canvas.height,
-          canvas
-        ));
+    function createParticles(): void {
+      for (let i = 0; i < 100; i++) {
+        particles.push(
+          new Particle(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height,
+            canvas
+          )
+        );
       }
     }
 
-    function connectParticles(ctx) {
+    function connectParticles(ctx: CanvasRenderingContext2D): void {
       for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
+        for (let j = i; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 150) {
+          if (distance < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(76, 175, 80, ${0.1 * (1 - distance/150)})`;
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = `rgba(76, 175, 80, ${0.2 - distance/100})`;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
@@ -86,14 +110,14 @@
       }
     }
 
-    function animate() {
+    function animate(): void {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       particles.forEach(particle => {
         particle.update();
         particle.draw(ctx);
       });
-      
+
       connectParticles(ctx);
       requestAnimationFrame(animate);
     }
@@ -104,7 +128,6 @@
     animate();
   }
 
-  // Initialize canvas when the component mounts
   document.addEventListener('DOMContentLoaded', initCanvas);
 </script>
 
