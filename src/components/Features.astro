@@ -71,7 +71,14 @@ const features = [
         )}
       </div>
       <div class={`feature-image ${index % 2 === 1 ? 'order-1' : ''}`}>
-        <img src={feature.image} alt={feature.title} />
+        <img 
+          src={feature.image} 
+          alt={feature.title}
+          loading="lazy"
+          srcset={`${feature.image.replace('.gif', '-small.gif')} 400w,
+                   ${feature.image} 800w`}
+          sizes="(max-width: 768px) 400px, 800px"
+        />
       </div>
     </div>
   ))}
@@ -172,12 +179,14 @@ const features = [
     .feature-card {
       position: relative;
       height: auto;
-      min-height: 100vh;
+      min-height: auto;
       flex-direction: column;
-      opacity: 1;
-      visibility: visible;
+      opacity: 1 !important;
+      visibility: visible !important;
       padding: 4rem 1.5rem;
       gap: 3rem;
+      transform: none !important;
+      margin-bottom: 2rem;
     }
 
     .feature-content {
@@ -216,44 +225,41 @@ const features = [
 </style>
 
 <script>
-  // Add a check for mobile devices
-  const isMobile = window.innerWidth <= 768;
-  
-  if (!isMobile) {
-    // Only run the scroll animation on desktop
+  // Only run on desktop
+  if (!window.matchMedia('(max-width: 768px)').matches) {
     const featureCards = document.querySelectorAll('.feature-card');
-    
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const viewportHeight = window.innerHeight;
-      
-      featureCards.forEach((card, index) => {
-        const cardElement = card as HTMLElement;
-        const triggerPoint = Math.floor(index * viewportHeight * 1.6);
-        const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 2.4);
-        
-        if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
-          cardElement.classList.add('visible');
-          cardElement.style.zIndex = '2';
-        } else {
-          cardElement.classList.remove('visible');
-          cardElement.style.zIndex = '1';
-        }
-      });
-    };
-
-    // Use requestAnimationFrame for smoother scrolling
     let ticking = false;
-    window.addEventListener('scroll', () => {
+    
+    // Throttle scroll events for better performance
+    const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          handleScroll();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const viewportHeight = window.innerHeight;
+          
+          featureCards.forEach((card, index) => {
+            const cardElement = card as HTMLElement;
+            // Adjusted trigger points to maintain smooth parallax
+            const triggerPoint = Math.floor(index * viewportHeight * 1.6);
+            const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 2.4);
+            
+            if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
+              cardElement.classList.add('visible');
+              cardElement.style.zIndex = '2';
+            } else {
+              cardElement.classList.remove('visible');
+              cardElement.style.zIndex = '1';
+            }
+          });
+          
           ticking = false;
         });
         ticking = true;
       }
-    });
+    };
 
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
     // Initial check
     handleScroll();
   }
