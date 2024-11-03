@@ -55,30 +55,21 @@ const features = [
 
 <section class="features">
   {features.map((feature, index) => (
-    <div class="feature-card" data-index={index}>
-      <div class={`feature-content ${index % 2 === 1 ? 'order-2' : ''}`}>
+    <div class="feature-card">
+      <div class="feature-content order-mobile-2">
         <h2>{feature.title}</h2>
         <p>{feature.description}</p>
-        {feature.stats && (
-          <div class="stats">
-            {feature.stats.map(stat => (
-              <div class="stat-item">
-                <h3>{stat.number}</h3>
-                <p>{stat.text}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        <div class="stats">
+          {feature.stats?.map(stat => (
+            <div class="stat-item">
+              <h3>{stat.number}</h3>
+              <p>{stat.text}</p>
+            </div>
+          ))}
+        </div>
       </div>
-      <div class={`feature-image ${index % 2 === 1 ? 'order-1' : ''}`}>
-        <img 
-          src={feature.image} 
-          alt={feature.title}
-          loading="lazy"
-          srcset={`${feature.image.replace('.gif', '-small.gif')} 400w,
-                   ${feature.image} 800w`}
-          sizes="(max-width: 768px) 400px, 800px"
-        />
+      <div class="feature-image order-mobile-1">
+        <img src={feature.image} alt={feature.title} loading="lazy" />
       </div>
     </div>
   ))}
@@ -122,14 +113,29 @@ const features = [
   }
 
   @media (max-width: 768px) {
+    .features {
+      height: auto;
+      padding: 2rem 0;
+    }
+
     .feature-card {
       position: relative;
       flex-direction: column;
-      padding: 3rem 1rem;
+      padding: 2rem 1rem;
       opacity: 1;
       visibility: visible;
       min-height: auto;
       height: auto;
+      margin-bottom: 3rem;
+    }
+
+    .order-mobile-1 {
+      order: 1;
+    }
+
+    .order-mobile-2 {
+      order: 2;
+      margin-top: 2rem;
     }
 
     .feature-image {
@@ -138,17 +144,17 @@ const features = [
       margin: 0 auto;
     }
 
-    .feature-content {
-      text-align: center;
+    .feature-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
     }
 
     .stats {
       flex-direction: column;
       align-items: center;
-    }
-
-    .order-1, .order-2 {
-      order: unset;
+      gap: 2rem;
+      margin-top: 2rem;
     }
   }
 
@@ -209,28 +215,25 @@ const features = [
 </style>
 
 <script>
-  // Only run parallax on desktop
-  if (!window.matchMedia('(max-width: 768px)').matches) {
-    const featureCards = document.querySelectorAll('.feature-card');
+  // Add lazy loading for images
+  document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('.feature-image img');
     
-    const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const viewportHeight = window.innerHeight;
-      
-      featureCards.forEach((card, index) => {
-        const cardElement = card as HTMLElement;
-        const triggerPoint = Math.floor(index * viewportHeight * 1.6);
-        const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 2.4);
-        
-        if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
-          cardElement.classList.add('visible');
-        } else {
-          cardElement.classList.remove('visible');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+          }
+          observer.unobserve(img);
         }
       });
-    };
+    }, {
+      rootMargin: '50px 0px',
+      threshold: 0.1
+    });
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-  }
+    images.forEach(img => imageObserver.observe(img));
+  });
 </script>

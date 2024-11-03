@@ -64,6 +64,45 @@ const navLinks = [
   @media (max-width: 768px) {
     .nav-links {
       display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.98);
+      padding: 5rem 2rem 2rem;
+      z-index: 999;
+    }
+
+    .nav-links.active {
+      display: flex;
+    }
+
+    .hamburger {
+      position: relative;
+      z-index: 1000;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 2rem;
+      height: 0.25rem;
+      background: var(--text-color);
+      margin: 0.25rem 0;
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
     }
   }
 
