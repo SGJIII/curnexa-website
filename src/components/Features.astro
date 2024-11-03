@@ -54,75 +54,77 @@ const features = [
 ---
 
 <section class="features">
-  {features.map((feature, index) => (
-    <div class="feature-card" id={`feature-${index}`}>
-      <div class={`feature-content ${index % 2 === 0 ? 'order-1' : 'order-2'}`}>
-        <h2>{feature.title}</h2>
-        <p>{feature.description}</p>
-        {feature.stats && (
-          <div class="stats">
-            {feature.stats.map(stat => (
-              <div class="stat-item">
-                <h3>{stat.number}</h3>
-                <p>{stat.text}</p>
-              </div>
-            ))}
-          </div>
-        )}
+  <div class="container">
+    {features.map((feature, index) => (
+      <div class="feature-card" data-index={index}>
+        <div class={`feature-content ${index % 2 === 0 ? 'order-1' : 'order-2'}`}>
+          <h2>{feature.title}</h2>
+          <p>{feature.description}</p>
+          {feature.stats && (
+            <div class="stats">
+              {feature.stats.map(stat => (
+                <div class="stat-item">
+                  <h3>{stat.number}</h3>
+                  <p>{stat.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div class={`feature-image ${index % 2 === 0 ? 'order-2' : 'order-1'}`}>
+          <img 
+            src={feature.image} 
+            alt={feature.title}
+            loading="lazy"
+            decoding="async"
+            width="540"
+            height="360"
+          />
+        </div>
       </div>
-      <div class={`feature-image ${index % 2 === 0 ? 'order-2' : 'order-1'}`}>
-        <img 
-          src={feature.image} 
-          alt={feature.title}
-          loading="lazy"
-        />
-      </div>
-    </div>
-  ))}
+    ))}
+  </div>
 </section>
 
 <style>
   .features {
-    position: relative;
+    padding: 4rem 0;
     background: white;
   }
 
   .feature-card {
     display: flex;
-    gap: 2rem;
+    gap: 4rem;
     align-items: center;
-    padding: 4rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    background: white;
+    padding: 6rem 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
   }
 
-  @media (min-width: 769px) {
-    .features {
-      min-height: 100vh;
-    }
+  .feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-    .feature-card {
-      min-height: 100vh;
-      display: flex;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .feature-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .feature-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
 
   @media (max-width: 768px) {
+    .features {
+      padding: 2rem 0;
+    }
+
     .feature-card {
       flex-direction: column;
-      padding: 3rem 1rem;
-      min-height: auto;
+      padding: 3rem 0;
       opacity: 1;
       transform: none;
+      gap: 2rem;
     }
 
     .feature-image {
@@ -135,7 +137,6 @@ const features = [
     .feature-content {
       order: 2 !important;
       text-align: center;
-      margin-top: 2rem;
     }
   }
 
@@ -203,18 +204,21 @@ const features = [
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          observer.unobserve(entry.target); // Stop observing once visible
         }
       });
     }, {
-      threshold: 0.2,
-      rootMargin: '0px'
+      threshold: 0.15,
+      rootMargin: '50px'
     });
 
-    features.forEach(feature => {
-      observer.observe(feature);
-    });
+    features.forEach(feature => observer.observe(feature));
   };
 
-  // Run on load
-  document.addEventListener('DOMContentLoaded', observeFeatures);
+  // Run once DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', observeFeatures);
+  } else {
+    observeFeatures();
+  }
 </script>
