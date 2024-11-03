@@ -56,7 +56,7 @@ const features = [
 <section class="features">
   <div class="container">
     {features.map((feature, index) => (
-      <div class="feature-card" data-index={index}>
+      <div class="feature-card">
         <div class={`feature-content ${index % 2 === 0 ? 'order-1' : 'order-2'}`}>
           <h2>{feature.title}</h2>
           <p>{feature.description}</p>
@@ -77,8 +77,6 @@ const features = [
             alt={feature.title}
             loading="lazy"
             decoding="async"
-            width="540"
-            height="360"
           />
         </div>
       </div>
@@ -99,7 +97,7 @@ const features = [
     padding: 6rem 0;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   .feature-card.visible {
@@ -122,8 +120,9 @@ const features = [
     .feature-card {
       flex-direction: column;
       padding: 3rem 0;
-      opacity: 1;
-      transform: none;
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
       gap: 2rem;
     }
 
@@ -197,28 +196,26 @@ const features = [
 </style>
 
 <script>
-  const observeFeatures = () => {
+  // Only run on desktop
+  if (!window.matchMedia('(max-width: 768px)').matches) {
     const features = document.querySelectorAll('.feature-card');
     
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target); // Stop observing once visible
         }
       });
     }, {
-      threshold: 0.15,
+      threshold: 0.1,
       rootMargin: '50px'
     });
 
     features.forEach(feature => observer.observe(feature));
-  };
-
-  // Run once DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', observeFeatures);
   } else {
-    observeFeatures();
+    // On mobile, make all features visible immediately
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.classList.add('visible');
+    });
   }
 </script>
