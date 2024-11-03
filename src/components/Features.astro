@@ -87,32 +87,69 @@ const features = [
 <style>
   .features {
     position: relative;
-    height: 800vh;
     background: white;
+  }
+
+  @media (min-width: 769px) {
+    .features {
+      height: 800vh; /* Only apply large height on desktop */
+    }
   }
 
   .feature-card {
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100vh;
     display: flex;
     gap: 2rem;
     align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
-    padding: 0 2rem;
+    padding: 4rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
     background: white;
-    transform: none !important;
   }
 
-  .feature-card.visible {
-    opacity: 1;
-    visibility: visible;
+  @media (min-width: 769px) {
+    .feature-card {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .feature-card.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .feature-card {
+      position: relative;
+      flex-direction: column;
+      padding: 3rem 1rem;
+      opacity: 1;
+      visibility: visible;
+      min-height: auto;
+      height: auto;
+    }
+
+    .feature-image {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .feature-content {
+      text-align: center;
+    }
+
+    .stats {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .order-1, .order-2 {
+      order: unset;
+    }
   }
 
   .feature-content {
@@ -169,101 +206,31 @@ const features = [
   .order-2 {
     order: 2;
   }
-
-  @media (max-width: 768px) {
-    .features {
-      height: auto;
-      padding: 2rem 0;
-    }
-
-    .feature-card {
-      position: relative;
-      height: auto;
-      min-height: auto;
-      flex-direction: column;
-      opacity: 1;
-      visibility: visible;
-      padding: 2rem 1rem;
-      gap: 2rem;
-      transform: none !important;
-      margin-bottom: 2rem;
-      top: auto;
-    }
-
-    .feature-content {
-      text-align: center;
-      order: 2 !important;
-    }
-
-    .feature-image {
-      order: 1 !important;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      max-height: 300px;
-      overflow: hidden;
-    }
-
-    .feature-image img {
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .stats {
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .order-1, .order-2 {
-      order: unset;
-    }
-  }
 </style>
 
 <script>
-  // Mobile-specific initialization
-  if (window.matchMedia('(max-width: 768px)').matches) {
+  // Only run parallax on desktop
+  if (!window.matchMedia('(max-width: 768px)').matches) {
     const featureCards = document.querySelectorAll('.feature-card');
-    featureCards.forEach(card => {
-      card.classList.add('visible');
-    });
-  } else {
-    // Desktop scroll animation (existing code)
-    const featureCards = document.querySelectorAll('.feature-card');
-    let ticking = false;
     
-    // Throttle scroll events for better performance
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const viewportHeight = window.innerHeight;
-          
-          featureCards.forEach((card, index) => {
-            const cardElement = card as HTMLElement;
-            // Adjusted trigger points to maintain smooth parallax
-            const triggerPoint = Math.floor(index * viewportHeight * 1.6);
-            const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 2.4);
-            
-            if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
-              cardElement.classList.add('visible');
-              cardElement.style.zIndex = '2';
-            } else {
-              cardElement.classList.remove('visible');
-              cardElement.style.zIndex = '1';
-            }
-          });
-          
-          ticking = false;
-        });
-        ticking = true;
-      }
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const viewportHeight = window.innerHeight;
+      
+      featureCards.forEach((card, index) => {
+        const cardElement = card as HTMLElement;
+        const triggerPoint = Math.floor(index * viewportHeight * 1.6);
+        const nextTriggerPoint = Math.floor((index + 1) * viewportHeight * 2.4);
+        
+        if (scrollTop >= triggerPoint && scrollTop < nextTriggerPoint) {
+          cardElement.classList.add('visible');
+        } else {
+          cardElement.classList.remove('visible');
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Initial check
     handleScroll();
   }
 </script>
